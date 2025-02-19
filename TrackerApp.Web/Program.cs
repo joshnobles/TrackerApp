@@ -15,7 +15,7 @@ namespace TrackerApp.Web
                 options.ClientId = builder.Configuration["Auth0:ClientId"]!;
             });
 
-            // register Razor Pages framework and require authentication for access to /Private folder
+            // register Razor Pages framework and require authentication for access to pages in /Private folder
             builder.Services.AddRazorPages(options =>
             {
                 options.Conventions.AuthorizeFolder("/Private");

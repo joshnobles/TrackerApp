@@ -13,9 +13,8 @@
     </head>
     <body>
         <header>
-        @{
-            var isLoggedin = User.Identity is not null && User.Identity.IsAuthenticated;
-        }
+            @{ var isLoggedIn = User.Identity is not null && User.Identity.IsAuthenticated; }
+
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div class="container">
                     <a class="navbar-brand" asp-area="" asp-page="/Index">Tracker App</a>
@@ -27,14 +26,14 @@
                             <li class="nav-item">
                                 <a class="nav-link text-primary" asp-area="" asp-page="/Index"><i class="bi bi-house-fill"></i> Home</a>
                             </li>
-                            @if (isLoggedin)
+                            @if (isLoggedIn)
                             {
                                 <li class="nav-item text-dark">
                                     <a class="nav-link text-primary" asp-page="/Private/Map"><i class="bi bi-globe-americas"></i> Map</a>
                                 </li>
                             }
                         </ul>
-                        @if (isLoggedin)
+                        @if (isLoggedIn)
                         {
                             <div class="nav-item text-dark">
                                 <a class="nav-link text-danger" asp-page="/Account/Logout"><i class="bi bi-person-fill-dash"></i> Logout</a>

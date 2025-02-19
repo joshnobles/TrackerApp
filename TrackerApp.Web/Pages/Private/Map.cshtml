@@ -4,10 +4,35 @@
     ViewData["Title"] = "Map";
 }
 
+@section Styles {
+
+    <link rel="stylesheet" href="~/lib/leaflet/leaflet.css" />
+
+    <style>
+
+        #map {
+            height: 600px;
+        }
+
+    </style>
+
+}
+
 <div class="container text-center">
     <div class="row">
         <div class="col">
             <h1>Map</h1>
         </div>
     </div>
+    <div class="row">
+        <div id="map" class="col-12"></div>
+    </div>
 </div>
+
+@section Scripts {
+
+    <script src="~/lib/leaflet/leaflet.js"></script>
+
+    <script src="~/js/MapHandler.js"></script>
+
+}
