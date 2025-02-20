@@ -1,4 +1,8 @@
 using Auth0.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
+using TrackerApp.Core.DataAccess;
+using TrackerApp.Core.Services.Implementations;
+using TrackerApp.Core.Services.Interfaces;
 
 namespace TrackerApp.Web
 {
@@ -21,6 +25,20 @@ namespace TrackerApp.Web
                 options.Conventions.AuthorizeFolder("/Private");
             });
 
+            // register Entity Framework Core ORM
+            builder.Services.AddDbContext<Context>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Development"));
+            });
+
+            // register secret service to hold API request verification secret
+            builder.Services.AddScoped<ISecretService, SecretService>(service => 
+                new SecretService(builder.Configuration["ApiRequestVerification:Secret"]!)
+            );
+
+            // register API controllers
+            builder.Services.AddControllers();
+
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
@@ -36,6 +54,9 @@ namespace TrackerApp.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // map API endpoints to controllers
+            app.MapControllers();
 
             app.MapRazorPages();
 
