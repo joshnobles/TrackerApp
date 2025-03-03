@@ -10,9 +10,17 @@
             <h1>Welcome to the Tracker App</h1>
         </div>
     </div>
+    @if (User.Identity is null || !User.Identity.IsAuthenticated)
+    {
+        <div class="row mt-5">
+            <div class="col">
+                <span class="text-muted">Please log in to see the location data</span>
+            </div>
+        </div>
+    }
     <div class="row mt-5">
         <div class="col">
-            <span class="text-muted">Please log in to see the location data</span>
+            <a href="https://github.com/joshnobles/TrackerApp" class="link-primary" target="_blank">GitHub Repo</a>
         </div>
     </div>
 </div>
