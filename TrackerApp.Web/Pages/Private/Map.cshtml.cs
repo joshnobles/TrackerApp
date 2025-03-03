@@ -7,6 +7,7 @@ namespace TrackerApp.Web.Pages.Private
     {
         public void OnGet()
         {
+
         }
     }
 }
