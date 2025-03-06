@@ -17,6 +17,7 @@ namespace TrackerApp.Web
             {
                 options.Domain = builder.Configuration["Auth0:Domain"]!;
                 options.ClientId = builder.Configuration["Auth0:ClientId"]!;
+                options.Scope = "openid profile email";
             });
 
             // register Razor Pages framework and require authentication for access to pages in /Private folder
