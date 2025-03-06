@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /TrackerApp.Web/appsettings.json
 /TrackerApp.Web/appsettings.Development.json
+/TrackerApp.Web/Logging/log.txt
