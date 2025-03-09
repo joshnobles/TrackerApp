@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TrackerApp.Core.DataAccess;
 using TrackerApp.Core.Models;
+using TrackerApp.Core.Services.Interfaces;
 using TrackerApp.Web.Logging;
 
 namespace TrackerApp.Web.Pages.Private
@@ -11,12 +12,13 @@ namespace TrackerApp.Web.Pages.Private
     public class MapModel : PageModel
     {
         private readonly Context _context;
-
+        private readonly IAuthenticationManagementApi _authManagementApi;
         private readonly Log<MapModel> _log;
 
-        public MapModel(Context context, IWebHostEnvironment environment, ILogger<MapModel> logger)
+        public MapModel(Context context, IAuthenticationManagementApi authManagementApi, IWebHostEnvironment environment, ILogger<MapModel> logger)
         {
             _context = context;
+            _authManagementApi = authManagementApi;
 
             _log = new(logger, environment);
         }
@@ -29,7 +31,7 @@ namespace TrackerApp.Web.Pages.Private
                 return Redirect("/Index");
             }
 
-            var userID = User.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value;
+            var userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrWhiteSpace(userID))
             {
@@ -41,8 +43,8 @@ namespace TrackerApp.Web.Pages.Private
             {
                 UserID = userID,
                 Name = User.Identity.Name,
-                Email = User.FindFirst(c => c.Type.Equals(ClaimTypes.Email))?.Value,
-                ProfileImageSrc = User.FindFirst(c => c.Type.Equals("picture"))?.Value
+                Email = User.FindFirstValue(ClaimTypes.Email),
+                ProfileImageSrc = User.FindFirstValue("picture")
             };
 
             if (!await UserExistsAsync(_context, currentUser))

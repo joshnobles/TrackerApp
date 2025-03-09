@@ -1,5 +1,6 @@
 using Auth0.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TrackerApp.Core.DataAccess;
 using TrackerApp.Core.Services.Implementations;
 using TrackerApp.Core.Services.Interfaces;
@@ -35,6 +36,17 @@ namespace TrackerApp.Web
             // register secret service to hold API request verification secret
             builder.Services.AddScoped<ISecretService, SecretService>(service => 
                 new SecretService(builder.Configuration["ApiRequestVerification:Secret"]!)
+            );
+
+            builder.Services.AddSingleton<IAuthenticationManagementApi, AuthenticationManagementApi>(service =>
+                new AuthenticationManagementApi
+                (
+                    builder.Configuration["Auth0:Domain"]!,
+                    builder.Configuration["Auth0:ClientId"]!,
+                    builder.Configuration["Auth0:ClientSecret"]!,
+                    builder.Configuration["Auth0:Audience"]!,
+                    Convert.ToInt32(builder.Configuration["Auth0:AccessTokenLifetime"])
+                )
             );
 
             // register API controllers
