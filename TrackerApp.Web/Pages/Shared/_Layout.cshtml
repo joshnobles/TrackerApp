@@ -1,70 +1,86 @@
 ﻿<!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>@ViewData["Title"] - Tracker App</title>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Tracker App</title>
 
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-        @RenderSection("Styles", required: false)
+    @RenderSection("Styles", required: false)
 
-    </head>
-    <body class="bg-dark">
-        <header>
-            @{ var isLoggedIn = User.Identity is not null && User.Identity.IsAuthenticated; }
+</head>
+<body class="bg-dark">
+    <header>
+        @using Microsoft.AspNetCore.Authorization
+        @inject IAuthorizationService AuthorizationService
+        @{
+            var isLoggedIn = User.Identity is not null && User.Identity.IsAuthenticated;
+        }
+        @{
+            bool isAdmin = false;
 
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
-                <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-page="/Index">Tracker App</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1 ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link text-primary" asp-area="" asp-page="/Index"><i class="bi bi-house-fill"></i> Home</a>
-                            </li>
-                            @if (isLoggedIn)
-                            {
-                                <li class="nav-item text-dark">
-                                    <a class="nav-link text-primary" asp-page="/Private/Map"><i class="bi bi-globe-americas"></i> Map</a>
-                                </li>
-                            }
-                        </ul>
+            if (User.Identity is not null)
+                isAdmin = (await AuthorizationService.AuthorizeAsync(User, "IsAdmin")).Succeeded;
+        }
+
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">Tracker App</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link text-primary" asp-area="" asp-page="/Index"><i class="bi bi-house-fill"></i> Home</a>
+                        </li>
                         @if (isLoggedIn)
                         {
-                            <div class="nav-item text-dark">
-                                <a class="nav-link text-danger" asp-page="/Account/Logout"><i class="bi bi-person-fill-dash"></i> Logout</a>
-                            </div>
+                            <li class="nav-item text-dark">
+                                <a class="nav-link text-primary" asp-page="/Private/Map"><i class="bi bi-globe-americas"></i> Map</a>
+                            </li>
                         }
-                        else
+                        @if (isAdmin)
                         {
-                            <div class="nav-item text-dark">
-                                <a class="nav-link text-success" asp-page="/Account/Login"><i class="bi bi-person-fill-add"></i> Login</a>
-                            </div>
+                            <li class="nav-item text-dark">
+                                <a class="nav-link text-primary" asp-page="/Private/Admin"><i class="bi bi-person-vcard-fill"></i> Admin</a>
+                            </li>
                         }
-                    </div>
+                    </ul>
+                    @if (isLoggedIn)
+                    {
+                        <div class="nav-item text-dark">
+                            <a class="nav-link text-danger" asp-page="/Account/Logout"><i class="bi bi-person-fill-dash"></i> Logout</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="nav-item text-dark">
+                            <a class="nav-link text-success" asp-page="/Account/Login"><i class="bi bi-person-fill-add"></i> Login</a>
+                        </div>
+                    }
                 </div>
-            </nav>
-        </header>
-
-        <main role="main" class="bg-dark">
-            @RenderBody()
-        </main>
-
-        <footer class="border-top footer text-muted mt-5">
-            <div class="container">
-                &copy; 2025 - Tracker App
             </div>
-        </footer>
+        </nav>
+    </header>
 
-        @RenderSection("Modals", required: false)
+    <main role="main" class="bg-dark">
+        @RenderBody()
+    </main>
 
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <footer class="border-top footer text-muted mt-5">
+        <div class="container">
+            &copy; 2025 - Tracker App
+        </div>
+    </footer>
 
-        @RenderSection("Scripts", required: false)
+    @RenderSection("Modals", required: false)
 
-    </body>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
 </html>
