@@ -15,7 +15,7 @@ namespace TrackerApp.Core.Services.Implementations
 
         private string? _accessToken;
 
-        private TimeOnly? _accessTokenGenerationTime;
+        private DateTime? _accessTokenGenerationTime;
 
         public AuthenticationManagementApi(string domain, string clientID, string clientSecret, string audience, int accessTokenLifetime)
         {
@@ -45,11 +45,11 @@ namespace TrackerApp.Core.Services.Implementations
             if (string.IsNullOrWhiteSpace(_accessToken) || _accessTokenGenerationTime is null)
                 await RotateTokenAsync();
 
-            var timeAlive = TimeOnly.FromDateTime(DateTime.Now) - _accessTokenGenerationTime;
+            var timeAlive = (DateTime.Now - _accessTokenGenerationTime) + TimeSpan.FromSeconds(5);
 
             var lifetime = TimeSpan.FromSeconds(_accessTokenLifetime);
             
-            if (timeAlive > lifetime)
+            if (timeAlive >= lifetime)
                 await RotateTokenAsync();
         }
 
@@ -64,7 +64,7 @@ namespace TrackerApp.Core.Services.Implementations
                 Audience = _audience
             };
 
-            _accessTokenGenerationTime = TimeOnly.FromDateTime(DateTime.Now);
+            _accessTokenGenerationTime = DateTime.Now;
 
             var response = await client.GetTokenAsync(request);
 
