@@ -53,7 +53,9 @@ namespace TrackerApp.Web
             // register Entity Framework Core ORM
             builder.Services.AddDbContext<Context>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Development"));
+                var serverVersion = new MySqlServerVersion(new Version(8, 0, 41));
+             
+                options.UseMySql(builder.Configuration.GetConnectionString("Default"), serverVersion);
             });
 
             // register secret service to hold API request verification secret
