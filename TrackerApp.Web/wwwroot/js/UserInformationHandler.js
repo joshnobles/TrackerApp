@@ -198,6 +198,41 @@
         }
     }
 
+    async deleteUser() {
+        const userID = this.editUserForm.userID.value;
+
+        try {
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': this.txtRequestVerificationToken.value
+                },
+                body: JSON.stringify(userID)
+            }
+
+            const params = new URLSearchParams({ handler: 'DeleteUser' });
+
+            const res = await fetch(`?${params}`, options);
+
+            if (!res.ok)
+                throw new Error(res.status);
+
+            this.alertMessage('Successfully deleted user', false);
+
+            await this.getAllUsers();
+        }
+        catch (e) {
+            if (e.message == 400 || e.message == 404)
+                this.alertMessage('Could not identify user to delete', true);
+            else
+                this.alertMessage('An error occurred deleting user', true);
+        }
+        finally {
+            this.closeEditUserModal();
+        }
+    }
+
     closeEditUserModal() {
         for (const key in this.editUserForm)
             this.editUserForm[key].value = '';
@@ -238,6 +273,9 @@
 
         this.btnSubmitEditUserForm
             .addEventListener('click', () => this.submitEditUserForm());
+
+        this.btnDeleteUser
+            .addEventListener('click', () => this.deleteUser());
     }
 
 }

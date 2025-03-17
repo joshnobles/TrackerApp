@@ -79,6 +79,29 @@ namespace TrackerApp.Web.Pages.Private
 
             await _context.SaveChangesAsync();
 
+            await _log.InformationAsync($"User: {editedUser.UserID} was updated");
+
+            return new EmptyResult();
+        }
+    
+        public async Task<IActionResult> OnPostDeleteUser([FromBody] string userID)
+        {
+            if (string.IsNullOrWhiteSpace(userID))
+                return BadRequest();
+
+            var userToDelete = await _context.User
+                .FirstOrDefaultAsync(x => EF.Functions.Like(x.UserID, userID));
+
+            if (userToDelete is null)
+                return NotFound();
+
+            _context.User
+                .Remove(userToDelete);
+
+            await _context.SaveChangesAsync();
+
+            await _log.InformationAsync($"User: {userID} was deleted");
+
             return new EmptyResult();
         }
     }
