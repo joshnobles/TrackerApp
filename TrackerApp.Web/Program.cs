@@ -48,6 +48,7 @@ namespace TrackerApp.Web
             builder.Services.AddRazorPages(options =>
             {
                 options.Conventions.AuthorizeFolder("/Private");
+                options.Conventions.AuthorizePage("/Callback");
             });
 
             // register Entity Framework Core ORM
