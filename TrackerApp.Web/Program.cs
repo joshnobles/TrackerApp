@@ -33,6 +33,7 @@ namespace TrackerApp.Web
                 options.Domain = builder.Configuration["Auth0:Domain"]!;
                 options.ClientId = builder.Configuration["Auth0:ClientId"]!;
                 options.Scope = "openid profile email";
+                options.CallbackPath = "http://trackerstalker.com/callback";
             });
 
             // register handler for checking if a user has the admin role
