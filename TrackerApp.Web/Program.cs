@@ -33,23 +33,26 @@ namespace TrackerApp.Web
                 options.Domain = builder.Configuration["Auth0:Domain"]!;
                 options.ClientId = builder.Configuration["Auth0:ClientId"]!;
                 options.Scope = "openid profile email";
-                options.CallbackPath = "https://trackerstalker.com/Private/Map";
             });
 
             // register handler for checking if a user has the admin role
             builder.Services.AddSingleton<IAuthorizationHandler, IsAdminHandler>();
 
+            // register handler for checking if a user is authenticated
+            builder.Services.AddSingleton<IAuthorizationHandler, IsLoggedInHandler>();
+
             // register policy for requiring admin role
             builder.Services.AddAuthorization(options =>
             {
+                options.AddPolicy("IsLoggedIn", policy => policy.Requirements.Add(new IsLoggedInRequirement()));
                 options.AddPolicy("IsAdmin", policy => policy.Requirements.Add(new IsAdminRequirement("Admin")));
             });
 
             // register Razor Pages framework and require authentication for access to pages in /Private folder
             builder.Services.AddRazorPages(options =>
             {
-                options.Conventions.AuthorizeFolder("/Private");
-                options.Conventions.AuthorizePage("/Callback");
+                options.Conventions.AuthorizeFolder("/Private", "IsLoggedIn");
+                options.Conventions.AuthorizePage("/Private/Admin", "IsAdmin");
             });
 
             // register Entity Framework Core ORM

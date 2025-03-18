@@ -4,14 +4,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TrackerApp.Core.DataAccess;
-using TrackerApp.Core.Models;
 using TrackerApp.Core.Services.Static;
 using TrackerApp.Web.Logging;
 using TrackerApp.Web.ViewModels;
 
 namespace TrackerApp.Web.Pages.Private
 {
-    [Authorize(Policy = "IsAdmin")]
     public class AdminModel : PageModel
     {
         private readonly Context _context;
