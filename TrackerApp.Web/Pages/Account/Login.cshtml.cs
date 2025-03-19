@@ -9,7 +9,7 @@ namespace TrackerApp.Web.Pages.Account
         public async Task OnGet()
         {
             var authProperties = new LoginAuthenticationPropertiesBuilder()
-                .WithRedirectUri("https://trackerstalker.com")
+                .WithRedirectUri("/")
                 .Build();
 
             await HttpContext

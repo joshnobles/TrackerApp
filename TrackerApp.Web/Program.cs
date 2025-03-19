@@ -27,6 +27,8 @@ namespace TrackerApp.Web
                 )
             );
 
+            builder.Services.AddSession();
+
             // register Auth0 authentication services
             builder.Services.AddAuth0WebAppAuthentication(options =>
             {
@@ -85,6 +87,8 @@ namespace TrackerApp.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();
