@@ -51,6 +51,8 @@ namespace TrackerApp.Web
             // register Razor Pages framework and require authentication for access to pages in /Private folder
             builder.Services.AddRazorPages(options =>
             {
+                options.Conventions.AuthorizePage("/Callback");
+
                 options.Conventions.AuthorizeFolder("/Private", "IsLoggedIn");
                 options.Conventions.AuthorizePage("/Private/Admin", "IsAdmin");
             });
