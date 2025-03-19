@@ -1,5 +1,6 @@
 using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using TrackerApp.Core.DataAccess;
 using TrackerApp.Core.Services.Implementations;
@@ -50,6 +51,12 @@ namespace TrackerApp.Web
                 options.AddPolicy("IsAdmin", policy => policy.Requirements.Add(new IsAdminRequirement("Admin")));
             });
 
+            builder.Services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.Secure = CookieSecurePolicy.Always;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             // register Razor Pages framework and require authentication for access to pages in /Private folder
             builder.Services.AddRazorPages(options =>
             {
@@ -82,6 +89,11 @@ namespace TrackerApp.Web
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
