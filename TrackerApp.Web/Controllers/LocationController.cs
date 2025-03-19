@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TrackerApp.Core.DataAccess;
 using TrackerApp.Core.Models;
 using TrackerApp.Core.Services.Interfaces;
@@ -9,6 +10,7 @@ namespace TrackerApp.Web.Controllers
 {
     [Route("api/[controller]/")]
     [ApiController]
+    [AllowAnonymous]
     public class LocationController : ControllerBase
     {
         private readonly Context _context;
