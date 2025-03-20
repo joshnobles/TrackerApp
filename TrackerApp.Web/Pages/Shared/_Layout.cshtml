@@ -33,13 +33,16 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 ms-3">
-                        <li class="nav-item">
-                            <a class="nav-link text-primary" asp-area="" asp-page="/Index"><i class="bi bi-house-fill"></i> Home</a>
-                        </li>
                         @if (isLoggedIn)
                         {
                             <li class="nav-item text-dark">
                                 <a class="nav-link text-primary" asp-page="/Private/Map"><i class="bi bi-globe-americas"></i> Map</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-primary" asp-area="" asp-page="/Index"><i class="bi bi-house-fill"></i> Home</a>
                             </li>
                         }
                         @if (isAdmin)
