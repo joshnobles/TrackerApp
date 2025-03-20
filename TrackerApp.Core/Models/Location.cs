@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrackerApp.Core.Models
 {
-    [Table("Location")]
+    [Table("location")]
     public class Location
     {
         [Key]
