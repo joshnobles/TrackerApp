@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Tracker App</title>
 
+    <link rel="icon" href="~/Globe_Icon.png" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
@@ -17,8 +19,7 @@
         @inject IAuthorizationService AuthorizationService
         @{
             var isLoggedIn = User.Identity is not null && User.Identity.IsAuthenticated;
-        }
-        @{
+
             bool isAdmin = false;
 
             if (User.Identity is not null)

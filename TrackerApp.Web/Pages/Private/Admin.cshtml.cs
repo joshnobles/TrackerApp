@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -102,5 +101,24 @@ namespace TrackerApp.Web.Pages.Private
 
             return new EmptyResult();
         }
+
+        public async Task<IActionResult> OnGetAllLocations()
+        {
+            var locations = await _context.Location
+                .ToListAsync();
+
+            return new JsonResult(locations);
+        }
+
+        public async Task<IActionResult> OnPostDeleteLocations()
+        {
+            _context.Location
+                .RemoveRange(_context.Location);
+
+            await _context.SaveChangesAsync();
+
+            return new EmptyResult();
+        }
+
     }
 }
