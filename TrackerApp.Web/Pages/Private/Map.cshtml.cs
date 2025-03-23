@@ -83,6 +83,18 @@ namespace TrackerApp.Web.Pages.Private
             return new JsonResult(user);
         }
 
+        public async Task<IActionResult> OnGetNextLocation()
+        {
+            var location = await _context.Location
+                .OrderBy(l => l.DateRecorded)
+                .LastOrDefaultAsync();
+
+            if (location is null)
+                return NotFound();
+
+            return new JsonResult(location);
+        }
+
         private static Task<bool> UserExistsAsync(Context context, User user) =>
             context.User.AnyAsync(u => u.UserID.Equals(user.UserID));
 

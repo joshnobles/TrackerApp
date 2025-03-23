@@ -1,55 +1,105 @@
-﻿const map = L.map('map')
-    .setView([44, -77], 5);
+﻿class MapHandler {
+    constructor() {
+        this.chkPolyline = document.querySelector('#chkPolyline');
 
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(map);
+        this.map = L.map('map')
+            .setView([40.7128, -74.0060], 8);
 
-let popup = L.popup();
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(this.map);
 
-const showPopup = event => {
-    popup
-        .setLatLng(event.latlng)
-        .setContent(`Clicked at: ${event.latlng.lat.toFixed(4)}, ${event.latlng.lng.toFixed(4) }`)
-        .openOn(map);
-}
+        this.marker = null;
+        this.confidenceCircle = null;
+        this.polyline = null;
+        this.icon = L.divIcon({ className: 'bi bi-person-standing' });
 
-map.on('click', showPopup);
+        this.currentLocation = null;
 
-const sampleLocations = [
-    [41.2583, -77.0463],
-    [41.2518, -77.0458],
-    [41.2448, -77.0488],
-    [41.2429, -77.0446],
-    [41.2419, -77.0378],
-    [41.2411, -77.0342],
-    [41.2376, -77.0323],
-    [41.2374, -77.0277],
-    [41.2376, -77.0230],
-    [41.2336, -77.0226],
-    [41.2335, -77.0258]
-];
-
-let polyLine = L.polyline([], { color: 'red' });
-polyLine.addTo(map);
-
-let icon = L.divIcon({ className: 'bi bi-person-standing' });
-
-let marker = L.marker(sampleLocations[0], { icon: icon });
-marker.addTo(map);
-
-let i = 0;
-
-const displaySampleData = () => {
-    if (!sampleLocations[i]) {
-        polyLine.setLatLngs([]);
-        i = 0;
+        this.interval = setInterval(() => this.refreshAndDisplayLocation(), 1000);
     }
 
-    polyLine.addLatLng(sampleLocations[i]);
+    async refreshCurrentLocation() {
+        try {
+            const params = new URLSearchParams({ handler: 'NextLocation' });
 
-    marker.setLatLng(sampleLocations[i++]);
+            const res = await fetch(`?${params}`);
+
+            if (!res.ok)
+                throw new Error(res.status);
+
+            const location = await res.json();
+
+            if (!this.currentLocation || this.currentLocation.id != location.id) {
+                this.currentLocation = location;
+                return true;
+            }
+
+            return false;
+        }
+        catch (e) {
+            if (e.message == 404)
+                this.currentLocation = null;
+            else
+                console.log(e);
+        }
+    }
+
+    displayCurrentLocation() {
+        if (!this.currentLocation)
+            return;
+
+        const latLng = [this.currentLocation.latitude, this.currentLocation.longitude];
+
+        if (!this.marker) {
+            this.marker = L.marker(latLng, { icon: this.icon })
+            this.marker.addTo(this.map);
+        }
+        else
+            this.marker.setLatLng(latLng);
+
+        if (!this.confidenceCircle) {
+            this.confidenceCircle = L.circle(latLng, {
+                radius: this.currentLocation.confidence,
+                color: 'blue',
+                fillColor: '#blue',
+                fillOpacity: 0.5
+            });
+            this.confidenceCircle.addTo(this.map);
+        }
+        else {
+            this.confidenceCircle.setLatLng(latLng);
+            this.confidenceCircle.setRadius(this.currentLocation.confidence);
+        }
+
+        if (!this.chkPolyline.checked) {
+            if (this.polyline)
+                this.map.removeLayer(this.polyline);
+
+            this.polyline = null;
+            return;
+        }
+
+        if (!this.polyline) {
+            this.polyline = L.polyline([latLng], {
+                color: 'blue',
+                weight: 4,
+                opacity: 1,
+                smoothFactor: 1
+            });
+
+            this.polyline.addTo(this.map);
+        }
+        else
+            this.polyline.addLatLng(latLng);
+    }
+
+    async refreshAndDisplayLocation() {
+        await this.refreshCurrentLocation();
+        this.displayCurrentLocation();
+    }
+
 }
 
-const interval = setInterval(displaySampleData, 1000);
+new MapHandler();
