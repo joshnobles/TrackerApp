@@ -96,8 +96,10 @@
     }
 
     async refreshAndDisplayLocation() {
-        await this.refreshCurrentLocation();
-        this.displayCurrentLocation();
+        const isNewLocation = await this.refreshCurrentLocation();
+
+        if (isNewLocation)
+            this.displayCurrentLocation();
     }
 
 }
