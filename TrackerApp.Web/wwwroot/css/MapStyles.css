@@ -1,0 +1,13 @@
+﻿#map {
+    height: 600px;
+}
+
+.profile-image {
+    height: 96px;
+    width: 96px;
+}
+
+.map-icon {
+    width: 30px;
+    height: 30px;
+}
