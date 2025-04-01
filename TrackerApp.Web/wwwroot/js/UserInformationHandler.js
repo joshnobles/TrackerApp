@@ -112,7 +112,8 @@
                 { title: 'Profile Image' },
                 { title: ' ' }
             ],
-            data: userArrays
+            data: userArrays,
+            lengthMenu: [5, 10, 25, 50]
         }
 
         this.dataTable = new DataTable('#userTable', options);
