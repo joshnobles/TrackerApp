@@ -1,5 +1,7 @@
 ﻿class UserInformationHandler {
     constructor() {
+        this.dataTable = null;
+
         this.userTableBody = document.querySelector('#userTableBody');
         this.editUserModal = new bootstrap.Modal('#editUserModal');
 
@@ -24,7 +26,7 @@
 
         this.addEventListeners();
 
-        this.getAllUsers();
+        this.refreshUserTable();
     }
 
     async getAllUsers() {
@@ -36,7 +38,7 @@
 
             const json = await res.json();
 
-            this.populateUserTable(json);
+            return json;
         }
         catch (e) {
             this.alertMessage('An error occurred getting all users', true);
@@ -68,71 +70,61 @@
     }
 
     populateUserTable(users) {
-        this.userTableBody.textContent = '';
+        document
+            .querySelector('#userTable')
+            .textContent = '';
 
-        let tr;
-        let td;
-        let img;
-        let button;
-        let icon;
+        const userArrays = [];
+        let userArray;
 
         for (const user of users) {
-            tr = document.createElement('tr');
-            tr.classList.add('text-light');
+            userArray = [];
 
-            td = document.createElement('td');
-            td.textContent = user.userID;
+            for (const key in user) {
+                if (!user[key]) {
+                    userArray.push('NULL');
+                    continue;
+                }
 
-            tr.append(td);
-
-            td = document.createElement('td');
-            td.textContent = user.name ?? 'NULL';
-
-            tr.append(td);
-
-            td = document.createElement('td');
-            td.textContent = user.email ?? 'NULL';
-
-            tr.append(td);
-
-            td = document.createElement('td');
-
-            if (user.profileImageSrc) {
-                img = document.createElement('img');
-                img.classList.add('profile-image');
-                img.src = user.profileImageSrc;
-                img.alt = 'user profile image';
-
-                td.append(img);
+                if (key == 'profileImageSrc')
+                    userArray.push(`<img src="${user[key]}" class="profile-image" alt="user profile image" />`);
+                else
+                    userArray.push(user[key]);
             }
-            else
-                td.textContent = 'NULL';
 
-            tr.append(td);
+            userArray.push(`
+                <button class="btn edit-user-button" userid="${user['userID']}" onclick="userInformationHandler.displayEditUserModal(this)">
+                    <i class="bi bi-pencil-square text-light" userid="${user['userID']}"></i>
+                </button>
+            `);
 
-            td = document.createElement('td');
-
-            button = document.createElement('button');
-            button.classList.add('btn', 'edit-user-button');
-            button.setAttribute('userid', user.userID);
-
-            button.addEventListener('click', event => this.displayEditUserModal(event));
-
-            icon = document.createElement('i')
-            icon.classList.add('bi', 'bi-pencil-square', 'text-light');
-            icon.setAttribute('userid', user.userID);
-
-            button.append(icon);
-            td.append(button);
-
-            tr.append(td);
-
-            this.userTableBody.append(tr);
+            userArrays.push(userArray);
         }
+
+        if (this.dataTable)
+            this.dataTable.destroy();
+
+        const options = {
+            columns: [
+                { title: 'User ID' },
+                { title: 'Name' },
+                { title: 'Email' },
+                { title: 'Profile Image' },
+                { title: ' ' }
+            ],
+            data: userArrays
+        }
+
+        this.dataTable = new DataTable('#userTable', options);
     }
 
-    async displayEditUserModal(event) {
-        const userID = event.target.getAttribute('userid');
+    async refreshUserTable() {
+        const users = await this.getAllUsers();
+        this.populateUserTable(users);
+    }
+
+    async displayEditUserModal(button) {
+        const userID = button.getAttribute('userid');
 
         const user = await this.getSpecificUser(userID);
 
@@ -184,7 +176,7 @@
 
             this.closeEditUserModal();
 
-            await this.getAllUsers();
+            await this.refreshUserTable();
         }
         catch (e) {
             if (e.message == 404)
@@ -280,4 +272,4 @@
 
 }
 
-new UserInformationHandler();
+const userInformationHandler = new UserInformationHandler();

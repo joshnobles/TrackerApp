@@ -6,6 +6,8 @@
 
 @section Styles {
 
+    <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.2.2/sp-2.3.3/datatables.min.css" rel="stylesheet" integrity="sha384-LWkoZo9JW648WWbZjN4G96AU/Fk5n5sctaMwD2EI5gUygF9E9e79waIlf4awoMNr" crossorigin="anonymous">
+
     <style>
 
         .profile-image {
@@ -35,19 +37,8 @@
     </div>
     <div class="row mt-2">
         <div class="col">
-            <table class="table table-striped table-bordered text-light">
-                <thead>
-                    <tr>
-                        <th>User ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Profile Image</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="userTableBody">
+            <table id="userTable" class="table table-striped table-bordered text-light">
 
-                </tbody>
             </table>
         </div>
     </div>
@@ -143,6 +134,8 @@
 }
 
 @section Scripts {
+
+    <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.2.2/sp-2.3.3/datatables.min.js" integrity="sha384-LiYO2Yj0ZZdrjd8odK2qBgOcXKgzi1EubbVhVMjEafoHgoDpT1KtFcSVRR8zN26F" crossorigin="anonymous"></script>
 
     <script src="~/js/UserInformationHandler.js"></script>
 
