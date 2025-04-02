@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using TrackerApp.Core.DataAccess;
 using TrackerApp.Core.Models;
@@ -28,7 +29,7 @@ namespace TrackerApp.Web.Controllers
             var validationResults = Valid.ViewModel(viewModel);
 
             if (!validationResults.IsValid)
-                return new JsonResult(validationResults.ErrorResults);
+                return BadRequest(validationResults.ErrorResults);
 
             var requestVerificationSecret = _secretService.GetSecret();
 

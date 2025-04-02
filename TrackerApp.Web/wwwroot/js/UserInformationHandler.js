@@ -2,7 +2,6 @@
     constructor() {
         this.dataTable = null;
 
-        this.userTableBody = document.querySelector('#userTableBody');
         this.editUserModal = new bootstrap.Modal('#editUserModal');
 
         this.btnSubmitEditUserForm = document.querySelector('#btnSubmitEditUserForm');
@@ -41,7 +40,7 @@
             return json;
         }
         catch (e) {
-            this.alertMessage('An error occurred getting all users', true);
+            alertMessage('An error occurred getting all users', true);
         }
     }
 
@@ -61,9 +60,9 @@
         }
         catch (e) {
             if (e.message == 400 || e.message == 404)
-                this.alertMessage('Could not identify user', true);
+                alertMessage('Could not identify user', true);
             else
-                this.alertMessage('An error occurred getting user data', true);
+                alertMessage('An error occurred getting user data', true);
 
             this.closeEditUserModal();
         }
@@ -110,7 +109,7 @@
                 { title: 'Name' },
                 { title: 'Email' },
                 { title: 'Profile Image' },
-                { title: ' ' }
+                { title: ' ', orderable: false }
             ],
             data: userArrays,
             lengthMenu: [5, 10, 25, 50]
@@ -173,7 +172,7 @@
                 throw new Error(res.status);
             }
 
-            this.alertMessage('Successfully edited user', false);
+            alertMessage('Successfully edited user', false);
 
             this.closeEditUserModal();
 
@@ -181,11 +180,11 @@
         }
         catch (e) {
             if (e.message == 404)
-                this.alertMessage('Could not identify user', true);
+                alertMessage('Could not identify user', true);
             else if (e.message == 400)
-                this.alertMessage('Edited user contained invalid data', true);
+                alertMessage('Edited user contained invalid data', true);
             else
-                this.alertMessage('An error occurred editing user', true);
+                alertMessage('An error occurred editing user', true);
 
             this.closeEditUserModal();
         }
@@ -211,15 +210,15 @@
             if (!res.ok)
                 throw new Error(res.status);
 
-            this.alertMessage('Successfully deleted user', false);
+            alertMessage('Successfully deleted user', false);
 
             await this.getAllUsers();
         }
         catch (e) {
             if (e.message == 400 || e.message == 404)
-                this.alertMessage('Could not identify user to delete', true);
+                alertMessage('Could not identify user to delete', true);
             else
-                this.alertMessage('An error occurred deleting user', true);
+                alertMessage('An error occurred deleting user', true);
         }
         finally {
             this.closeEditUserModal();
@@ -236,30 +235,6 @@
         this.editUserModal.hide();
     }
 
-    alertMessage(message, isError) {
-        const alertMessageContainer = document.querySelector('#alertMessageContainer');
-
-        const row = document.createElement('div');
-        row.classList.add('row', 'text-light');
-
-        const col = document.createElement('div');
-        col.classList.add('col');
-
-        const alert = document.createElement('div');
-        alert.classList.add('alert', isError ? 'alert-danger' : 'alert-success');
-        alert.textContent = message;
-
-        col.append(alert);
-        row.append(col);
-
-        alertMessageContainer.append(row);
-
-        new Promise(res => setTimeout(() => {
-            alertMessageContainer.removeChild(row);
-            res();
-        }, 5000))
-    }
-
     addEventListeners() {
         this.btnCloseEditUserModal
             .addEventListener('click', () => this.closeEditUserModal());
@@ -270,7 +245,6 @@
         this.btnDeleteUser
             .addEventListener('click', () => this.deleteUser());
     }
-
 }
 
 const userInformationHandler = new UserInformationHandler();

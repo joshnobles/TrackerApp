@@ -1,5 +1,7 @@
 ﻿class LocationInformationHandler {
     constructor() {
+        this.dataTable = null;
+
         this.tableBody = document.querySelector('#locationTableBody');
 
         this.btnRefresh = document.querySelector('#btnRefreshLocations');
@@ -25,49 +27,52 @@
             return await res.json();
         }
         catch (e) {
-            this.alertMessage('An error occurred getting locations', true);
+            alertMessage('An error occurred getting locations', true);
         }
     }
 
     populateLocationTable(locations) {
-        this.tableBody.textContent = '';
+        document
+            .querySelector('#locationTable')
+            .textContent = '';
 
-        let tr;
-        let td;
+        const locationArrays = [];
+        let locationArray;
         let date;
 
         for (const location of locations) {
-            tr = document.createElement('tr');
-            tr.classList.add('text-light');
+            locationArray = [];
 
-            td = document.createElement('td');
-            date = new Date(location.dateRecorded);
-            td.textContent = date.toLocaleString();
+            for (const key in location) {
+                if (key === 'id')
+                    continue;
 
-            tr.append(td);
+                if (key === 'dateRecorded') {
+                    date = new Date(location[key]);
+                    locationArray.push(`${date.toLocaleDateString()} | ${date.toLocaleTimeString()}`);
+                }
+                else
+                    locationArray.push(location[key]);
+            }
 
-            td = document.createElement('td');
-            td.textContent = location.latitude;
-
-            tr.append(td);
-
-            td = document.createElement('td');
-            td.textContent = location.longitude;
-
-            tr.append(td);
-
-            td = document.createElement('td');
-            td.textContent = location.altitude;
-
-            tr.append(td);
-
-            td = document.createElement('td');
-            td.textContent = location.confidence;
-
-            tr.append(td);
-
-            this.tableBody.append(tr);
+            locationArrays.push(locationArray);
         }
+
+        if (this.dataTable)
+            this.dataTable.destroy();
+
+        const options = {
+            columns: [
+                { title: 'Date Recorded' },
+                { title: 'Latitude' },
+                { title: 'Longitude' },
+                { title: 'Confidence' }
+            ],
+            data: locationArrays,
+            lengthMenu: [5, 10, 25, 50]
+        }
+
+        this.dataTable = new DataTable('#locationTable', options);
     }
 
     async refreshLocationTable() {
@@ -94,10 +99,10 @@
             if (!res.ok)
                 throw new Error(res.status);
 
-            this.alertMessage('Successfully cleared all locations');
+            alertMessage('Successfully cleared all locations');
         }
         catch (e) {
-            this.alertMessage('An error occurred clearing locations');
+            alertMessage('An error occurred clearing locations');
         }
         finally {
             await this.refreshLocationTable();
@@ -108,30 +113,6 @@
         this.btnRefresh.addEventListener('click', () => this.refreshLocationTable());
 
         this.btnClear.addEventListener('click', () => this.clearLocations());
-    }
-
-    alertMessage(message, isError) {
-        const alertMessageContainer = document.querySelector('#alertMessageContainer');
-
-        const row = document.createElement('div');
-        row.classList.add('row', 'text-light');
-
-        const col = document.createElement('div');
-        col.classList.add('col');
-
-        const alert = document.createElement('div');
-        alert.classList.add('alert', isError ? 'alert-danger' : 'alert-success');
-        alert.textContent = message;
-
-        col.append(alert);
-        row.append(col);
-
-        alertMessageContainer.append(row);
-
-        new Promise(res => setTimeout(() => {
-            alertMessageContainer.removeChild(row);
-            res();
-        }, 5000))
     }
 }
 
