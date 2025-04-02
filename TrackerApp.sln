@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackerApp.Web", "TrackerAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackerApp.Core", "TrackerApp.Core\TrackerApp.Core.csproj", "{8E37B046-28E6-4F17-B10A-2844872BC5EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackerApp.Tests", "TrackerApp.Tests\TrackerApp.Tests.csproj", "{47224057-30F7-4FD0-BA36-E82F235BB7B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8E37B046-28E6-4F17-B10A-2844872BC5EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E37B046-28E6-4F17-B10A-2844872BC5EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E37B046-28E6-4F17-B10A-2844872BC5EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47224057-30F7-4FD0-BA36-E82F235BB7B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47224057-30F7-4FD0-BA36-E82F235BB7B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47224057-30F7-4FD0-BA36-E82F235BB7B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47224057-30F7-4FD0-BA36-E82F235BB7B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

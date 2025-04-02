@@ -10,7 +10,7 @@ namespace TrackerApp.Core.Services.Static
             var result = new ViewModelValidationResult();
 
             var vc = new ValidationContext(viewModel);
-
+            
             result.IsValid = Validator.TryValidateObject(viewModel, vc, result.ErrorResults, true);
 
             return result;
