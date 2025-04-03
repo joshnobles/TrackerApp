@@ -6,9 +6,9 @@ namespace TrackerApp.Tests
     [TestClass]
     public sealed class LocationTests
     {
-        private AddLocationViewModel[] GetBadAddLocationViewModels()
+        private static AddLocationViewModel[] GetBadAddLocationViewModels()
         {
-            return 
+            return
             [
                 new AddLocationViewModel
                 {
@@ -16,7 +16,7 @@ namespace TrackerApp.Tests
                     Longitude = 0,
                     Altitude = 100,
                     Confidence = 10,
-                    RequestVerificationSecret = "Cg/h88o9FkHIpBlrDuoQPVkfNvZv1Erd6KuCcx+GKVQ="
+                    RequestVerificationSecret = "invalid"
                 },
                 new AddLocationViewModel
                 {
@@ -24,7 +24,7 @@ namespace TrackerApp.Tests
                     Longitude = 200,
                     Altitude = 100,
                     Confidence = 10,
-                    RequestVerificationSecret = "Cg/h88o9FkHIpBlrDuoQPVkfNvZv1Erd6KuCcx+GKVQ="
+                    RequestVerificationSecret = "invalid"
                 },
                 new AddLocationViewModel
                 {
@@ -32,7 +32,7 @@ namespace TrackerApp.Tests
                     Longitude = 90,
                     Altitude = -1000,
                     Confidence = 10,
-                    RequestVerificationSecret = "Cg/h88o9FkHIpBlrDuoQPVkfNvZv1Erd6KuCcx+GKVQ="
+                    RequestVerificationSecret = "invalid"
                 },
                 new AddLocationViewModel
                 {
@@ -40,7 +40,7 @@ namespace TrackerApp.Tests
                     Longitude = 90,
                     Altitude = 100,
                     Confidence = 0.05,
-                    RequestVerificationSecret = "Cg/h88o9FkHIpBlrDuoQPVkfNvZv1Erd6KuCcx+GKVQ="
+                    RequestVerificationSecret = "invalid"
                 },
                 new AddLocationViewModel
                 {
@@ -56,7 +56,7 @@ namespace TrackerApp.Tests
                     Longitude = 90,
                     Altitude = 100,
                     Confidence = 10,
-                    RequestVerificationSecret = "Cg/h88o9FkHIpBlr*DuoQPVkfNvZv1Erd6KuCcx+GKVQ="
+                    RequestVerificationSecret = "invalid"
                 },
                 new AddLocationViewModel
                 {
@@ -72,7 +72,7 @@ namespace TrackerApp.Tests
                     Longitude = 90,
                     Altitude = 100,
                     Confidence = 150,
-                    RequestVerificationSecret = "Cg/h88o9FkHIpBlrDuoQPVkfNvZv1Erd6KuCcx+GKVQ="
+                    RequestVerificationSecret = "invalid"
                 },
                 new AddLocationViewModel
                 {
@@ -80,7 +80,7 @@ namespace TrackerApp.Tests
                     Longitude = -300,
                     Altitude = 100,
                     Confidence = 10,
-                    RequestVerificationSecret = "Cg/h88o9FkHIpBlrDuoQPVkfNvZv1Erd6KuCcx+GKVQ="
+                    RequestVerificationSecret = "invalid"
                 },
                 new AddLocationViewModel
                 {
@@ -93,7 +93,7 @@ namespace TrackerApp.Tests
             ];
         } 
 
-        private AddLocationViewModel[] GetGoodAddLocationViewModels()
+        private static AddLocationViewModel[] GetGoodAddLocationViewModels()
         {
             return
             [
@@ -103,7 +103,7 @@ namespace TrackerApp.Tests
                     Longitude = 0,
                     Altitude = 0,
                     Confidence = 0.1,
-                    RequestVerificationSecret = "Cg/h88o9FkHIpBlrDuoQPVkfNvZv1Erd6KuCcx+GKVQ="
+                    RequestVerificationSecret = "AbCdEfGhIjKlMnOpQrStUvWxYzsuth1234567890+/=="
                 },
                 new AddLocationViewModel
                 {

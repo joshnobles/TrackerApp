@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using TrackerApp.Core.Services.Interfaces;
+using TrackerApp.Core.Services.Static;
 using TrackerApp.Web.Policies.Requirements;
 
 namespace TrackerApp.Web.Policies.Handlers
@@ -25,6 +26,15 @@ namespace TrackerApp.Web.Policies.Handlers
             }
 
             var roles = await _authManagementApi.GetUserRolesAsync(userID);
+
+            foreach (var role in roles)
+            {
+                if (!Valid.Role(role))
+                {
+                    context.Fail();
+                    return;
+                }
+            }
 
             if (roles.Any(r => r.Equals("Admin")))
             {
