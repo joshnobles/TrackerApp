@@ -2,7 +2,7 @@
 
 namespace TrackerApp.Web.ViewModels
 {
-    public class EditUserViewModel
+    public class AddUserViewModel
     {
         private string? _name;
         private string? _email;

@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TrackerApp.Core.DataAccess;
 using TrackerApp.Core.Models;
+using TrackerApp.Core.Services.Static;
 using TrackerApp.Web.Logging;
+using TrackerApp.Web.ViewModels;
 
 namespace TrackerApp.Web.Pages.Private
 {
@@ -27,30 +29,6 @@ namespace TrackerApp.Web.Pages.Private
                 await _log.ErrorAsync("Unauthenticated user accessed map page");
                 return Redirect("/Index");
             }
-
-            var userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrWhiteSpace(userID))
-            {
-                await _log.ErrorAsync("Unable to identify authenticated user");
-                return Redirect("/Index");
-            }
-
-            var currentUser = new User()
-            {
-                UserID = userID,
-                Name = User.Identity.Name,
-                Email = User.FindFirstValue(ClaimTypes.Email),
-                ProfileImageSrc = User.FindFirstValue("picture")
-            };
-
-            if (!await UserExistsAsync(_context, currentUser))
-            {
-                await CreateUserAsync(_context, currentUser);
-                await _log.InformationAsync($"New user created: {{ id: {currentUser.UserID}, name: {currentUser.Name ?? "NULL"}, email: {currentUser.Email ?? "NULL"} }}");
-            }
-            else
-                await _log.InformationAsync($"User logged in: {{ id: {currentUser.UserID}, name: {currentUser.Name ?? "NULL"}, email: {currentUser.Email ?? "NULL"} }}");
 
             return Page();
         }
@@ -94,15 +72,5 @@ namespace TrackerApp.Web.Pages.Private
 
             return new JsonResult(location);
         }
-
-        private static Task<bool> UserExistsAsync(Context context, User user) =>
-            context.User.AnyAsync(u => u.UserID.Equals(user.UserID));
-
-        private static async Task CreateUserAsync(Context context, User user)
-        {
-            await context.User.AddAsync(user);
-            await context.SaveChangesAsync();
-        }
-
     }
 }
