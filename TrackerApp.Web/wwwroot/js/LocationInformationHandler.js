@@ -66,6 +66,7 @@
                 { title: 'Date Recorded' },
                 { title: 'Latitude' },
                 { title: 'Longitude' },
+                { title: 'Altitude' },
                 { title: 'Confidence' }
             ],
             data: locationArrays,
