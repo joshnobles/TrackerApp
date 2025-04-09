@@ -19,9 +19,5 @@ namespace TrackerApp.Web.ViewModels
         [Required]
         [Range(0.1, 99.99)]
         public double Confidence { get; set; }
-
-        [Required]
-        [RegularExpression("^[A-Za-z0-9+/=]{44}$")]
-        public string RequestVerificationSecret { get; set; } = null!;
     }
 }

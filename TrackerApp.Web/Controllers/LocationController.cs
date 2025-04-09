@@ -24,16 +24,19 @@ namespace TrackerApp.Web.Controllers
         }
 
         [HttpPost("AddLocation")]
-        public async Task<IActionResult> AddLocation([FromBody] AddLocationViewModel viewModel)
+        public async Task<IActionResult> AddLocation([FromBody] AddLocationViewModel viewModel, [FromHeader] string requestVerificationSecret)
         {
             var validationResults = Valid.ViewModel(viewModel);
 
             if (!validationResults.IsValid)
                 return BadRequest(validationResults.ErrorResults);
 
-            var requestVerificationSecret = _secretService.GetSecret();
+            if (!Valid.RequestVerificationSecret(requestVerificationSecret))
+                return BadRequest();
 
-            if (!requestVerificationSecret.Equals(viewModel.RequestVerificationSecret))
+            var secret = _secretService.GetSecret();
+
+            if (!secret.Equals(requestVerificationSecret))
                 return Unauthorized();
 
             var newLocation = new Location()

@@ -21,5 +21,10 @@ namespace TrackerApp.Core.Services.Static
         {
             return Regex.IsMatch(role, @"^[A-Za-z]{3,20}$");
         }
+
+        public static bool RequestVerificationSecret(string secret)
+        {
+            return Regex.IsMatch(secret, @"^[A-Za-z0-9+/=]{44}$");
+        }
     }
 }
