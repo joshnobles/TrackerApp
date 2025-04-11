@@ -2,6 +2,7 @@
 {
     public interface ISecretService
     {
-        public string GetSecret();
+        public string GetRequestVerificationSecret();
+        public string GetThunderForestSecret();
     }
 }

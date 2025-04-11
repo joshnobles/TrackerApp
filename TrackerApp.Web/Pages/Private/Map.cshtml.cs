@@ -1,23 +1,24 @@
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TrackerApp.Core.DataAccess;
-using TrackerApp.Core.Models;
-using TrackerApp.Core.Services.Static;
+using TrackerApp.Core.Services.Interfaces;
 using TrackerApp.Web.Logging;
-using TrackerApp.Web.ViewModels;
 
 namespace TrackerApp.Web.Pages.Private
 {
     public class MapModel : PageModel
     {
         private readonly Context _context;
+        private readonly ISecretService _secretService;
         private readonly Log<MapModel> _log;
 
-        public MapModel(Context context, IWebHostEnvironment environment, ILogger<MapModel> logger)
+        public MapModel(Context context, ISecretService secretService, IWebHostEnvironment environment, ILogger<MapModel> logger)
         {
             _context = context;
+            _secretService = secretService;
 
             _log = new(logger, environment);
         }
@@ -71,6 +72,12 @@ namespace TrackerApp.Web.Pages.Private
                 return NotFound();
 
             return new JsonResult(location);
+        }
+
+        [RequireAntiforgeryToken]
+        public IActionResult OnGetThunderForestApiKey()
+        {
+            return new JsonResult(_secretService.GetThunderForestSecret());
         }
     }
 }

@@ -75,8 +75,12 @@ namespace TrackerApp.Web
             });
 
             // register secret service to hold API request verification secret
-            builder.Services.AddScoped<ISecretService, SecretService>(service => 
-                new SecretService(builder.Configuration["ApiRequestVerification:Secret"]!)
+            builder.Services.AddSingleton<ISecretService, SecretService>(service => 
+                new SecretService
+                (
+                    builder.Configuration["ApiRequestVerification:Secret"]!,
+                    builder.Configuration["TileLayerApiKeys:ThunderForest"]!
+                )
             );
 
             // register API controllers

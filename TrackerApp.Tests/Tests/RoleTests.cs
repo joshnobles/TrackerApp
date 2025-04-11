@@ -1,6 +1,6 @@
 ﻿using TrackerApp.Core.Services.Static;
 
-namespace TrackerApp.Tests
+namespace TrackerApp.Tests.Tests
 {
     [TestClass]
     public sealed class RoleTests

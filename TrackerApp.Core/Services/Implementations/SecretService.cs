@@ -4,13 +4,17 @@ namespace TrackerApp.Core.Services.Implementations
 {
     public class SecretService : ISecretService
     {
-        private readonly string _secret;
+        private readonly string _requestVerificationSecret;
+        private readonly string _thunderForestSecret;
 
-        public SecretService(string secret)
+        public SecretService(string requestVerificationSecret, string thunderForestSecret)
         {
-            _secret = secret;
+            _requestVerificationSecret = requestVerificationSecret;
+            _thunderForestSecret = thunderForestSecret;
         }
 
-        public string GetSecret() => _secret;
+        public string GetRequestVerificationSecret() => _requestVerificationSecret;
+
+        public string GetThunderForestSecret() => _thunderForestSecret;
     }
 }

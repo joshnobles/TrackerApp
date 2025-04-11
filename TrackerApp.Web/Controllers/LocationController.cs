@@ -34,7 +34,7 @@ namespace TrackerApp.Web.Controllers
             if (!Valid.RequestVerificationSecret(requestVerificationSecret))
                 return BadRequest();
 
-            var secret = _secretService.GetSecret();
+            var secret = _secretService.GetRequestVerificationSecret();
 
             if (!secret.Equals(requestVerificationSecret))
                 return Unauthorized();

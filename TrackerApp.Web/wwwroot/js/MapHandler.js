@@ -2,13 +2,25 @@
     constructor() {
         this.chkPolyline = document.querySelector('#chkPolyline');
 
-        this.map = L.map('map')
-            .setView([40.7128, -74.0060], 8);
+        this.txtRequestVerificationToken = document.querySelector('input[name=__RequestVerificationToken]');
 
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(this.map);
+        this.getTileLayers()
+            .then(tileLayers => {
+                this.map = L.map('map', {
+                    center: [40.7128, -74.0060],
+                    zoom: 8,
+                    layers: [tileLayers[Object.keys(tileLayers)[0]]]
+                });
+
+                L.control
+                    .layers(tileLayers, {})
+                    .addTo(this.map);
+
+                document
+                    .querySelector('.leaflet-control-layers-list')
+                    .classList
+                    .add('text-start');
+            });
 
         this.marker = null;
         this.confidenceCircle = null;
@@ -56,7 +68,7 @@
     }
 
     displayCurrentLocation() {
-        if (!this.currentLocation)
+        if (!this.currentLocation || !this.map)
             return;
 
         const latLng = [this.currentLocation.latitude, this.currentLocation.longitude];
@@ -92,7 +104,7 @@
 
         if (!this.polyline) {
             this.polyline = L.polyline([latLng], {
-                color: 'black',
+                color: 'cyan',
                 weight: 4,
                 opacity: 1,
                 smoothFactor: 1
@@ -109,6 +121,72 @@
 
         if (isNewLocation)
             this.displayCurrentLocation();
+    }
+
+    async getTileLayers() {
+        const apiKey = await this.getThunderForestApiKey();
+
+        const tileLayers = {
+            'Open Street Map': L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }),
+            'Smooth Dark': L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}', {
+                minZoom: 0,
+                maxZoom: 20,
+                attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                ext: 'png'
+            }),
+            'Water Color': L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.{ext}', {
+                minZoom: 1,
+                maxZoom: 16,
+                attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                ext: 'jpg'
+            }),
+            'Satellite': L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 16,
+                attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>'
+            })
+        }
+
+        if (apiKey) {
+            tileLayers['Hell'] = L.tileLayer(`https://{s}.tile.thunderforest.com/spinal-map/{z}/{x}/{y}{r}.png?apikey=${apiKey}`, {
+                attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                apikey: apiKey,
+                maxZoom: 22
+            });
+
+            tileLayers['Western'] = L.tileLayer(`https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}{r}.png?apikey=${apiKey}`, {
+                attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                apikey: apiKey,
+                maxZoom: 22
+            });
+        }
+
+        return tileLayers;
+    }
+
+    async getThunderForestApiKey() {
+        const options = {
+            method: 'GET',
+            headers: {
+                'RequestVerificationToken': this.txtRequestVerificationToken.value
+            }
+        }
+
+        const params = new URLSearchParams({ handler: 'ThunderForestApiKey' });
+
+        try {
+            const response = await fetch(`?${params}`, options);
+
+            if (!response.ok)
+                throw new Error(response.status);
+
+            return await response.json();
+        }
+        catch (e) {
+            return null;
+        }
     }
 
 }

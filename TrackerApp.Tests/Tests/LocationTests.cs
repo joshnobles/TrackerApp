@@ -1,7 +1,7 @@
 ﻿using TrackerApp.Core.Services.Static;
 using TrackerApp.Web.ViewModels;
 
-namespace TrackerApp.Tests
+namespace TrackerApp.Tests.Tests
 {
     [TestClass]
     public sealed class LocationTests
@@ -42,12 +42,19 @@ namespace TrackerApp.Tests
                 {
                     Latitude = 45,
                     Longitude = 90,
-                    Altitude = 100,
+                    Altitude = 1000000,
                     Confidence = 10
                 },
                 new AddLocationViewModel
                 {
                     Latitude = 45,
+                    Longitude = -90000,
+                    Altitude = 100,
+                    Confidence = 10
+                },
+                new AddLocationViewModel
+                {
+                    Latitude = -45000,
                     Longitude = 90,
                     Altitude = 100,
                     Confidence = 10
@@ -57,14 +64,7 @@ namespace TrackerApp.Tests
                     Latitude = 45,
                     Longitude = 90,
                     Altitude = 100,
-                    Confidence = 10
-                },
-                new AddLocationViewModel
-                {
-                    Latitude = 45,
-                    Longitude = 90,
-                    Altitude = 100,
-                    Confidence = 150
+                    Confidence = -150
                 },
                 new AddLocationViewModel
                 {

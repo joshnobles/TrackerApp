@@ -1,7 +1,7 @@
 ﻿using TrackerApp.Core.Services.Static;
 using TrackerApp.Web.ViewModels;
 
-namespace TrackerApp.Tests
+namespace TrackerApp.Tests.Tests
 {
     [TestClass]
     public sealed class UserTests
